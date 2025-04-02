@@ -36,7 +36,8 @@ const app = new App({
   },
 });
 
-app.command("/facequiz", async ({ ack, say }) => {
+app.command("/facequiz", async ({ ack, say, command }) => {
+  console.log("Slash command received:", command);
   await ack();
   await say("Hello from /facequiz!");
 });
