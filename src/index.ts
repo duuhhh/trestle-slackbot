@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { App, LogLevel, Installation, InstallationQuery } from "@slack/bolt";
 
 const app = new App({
