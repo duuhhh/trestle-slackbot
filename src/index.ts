@@ -1,30 +1,26 @@
-require("dotenv").config();
+import { App, ExpressReceiver } from "@slack/bolt";
 
-import { createApp } from "./app";
-import { addEvents } from "./events";
-import { addSlashCommands } from "./commands";
-import { createHandler, addHttpHandlers } from "./http";
-
-const receiver = createHandler({
+const receiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET!,
+  clientId: process.env.SLACK_CLIENT_ID!,
+  clientSecret: process.env.SLACK_CLIENT_SECRET!,
+  stateSecret: "super-secure-secret",
+  scopes: ["commands", "chat:write", "app_mentions:read"],
+  installerOptions: {
+    redirectUriPath: "/slack/oauth_redirect",
+  },
 });
 
-const app = createApp({
-  slackBotToken: process.env.SLACK_BOT_TOKEN!,
-  slackSigningSecret: process.env.SLACK_SIGNING_SECRET!,
-  receiver,
+// Create the Bolt app with the receiver
+const app = new App({ receiver });
+
+// Optional home route
+receiver.router.get("/", (_req, res) => {
+  res.send("Slackbot is alive with OAuth 💪");
 });
 
-addSlashCommands(app);
-addEvents(app);
-addHttpHandlers({
-  app,
-  receiver,
-  allowedTokens: [process.env.WEBHOOK_TOKEN!],
-  dmChannel: process.env.SLACK_WEBHOOK_CHANNEL || "#random",
-});
-
+// Start the app
 (async () => {
-  await app.start(process.env.PORT as string);
-  console.log(`⚡️ Bolt app is listening at localhost:${process.env.PORT}`);
+  await app.start(process.env.PORT || 3000);
+  console.log("⚡️ Bolt OAuth app is running!");
 })();
