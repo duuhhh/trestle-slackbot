@@ -15,16 +15,16 @@ const addNameGuessEventHandler = (app: ChatBot) => {
     const title = profile.title ? ` *${profile.title}*` : "";
     const text = `That was ${real_name} (<@${name}>).${title}`;
     if (correctAnswer === answer) {
-      await say(`Correct! :cake: ${text}`);
+      await say?.(`Correct! :cake: ${text}`);
     } else {
-      await say(`Nope! :cry: ${text}`);
+      await say?.(`Nope! :cry: ${text}`);
     }
     try {
       const quiz = await getFaceQuiz({ exclude: [user.id, body.user.id] });
-      await say(quiz);
+      await say?.(quiz);
     } catch (error) {
       if (error instanceof MessageError) {
-        await say((error as typeof MessageError).message);
+        await say?.((error as typeof MessageError).message);
       } else {
         throw error;
       }
