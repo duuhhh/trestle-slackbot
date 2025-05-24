@@ -1,9 +1,10 @@
-import { AckFn, RespondArguments, SayFn, SlashCommand } from "@slack/bolt";
+import { App, AckFn, RespondArguments, SayFn, SlashCommand } from "@slack/bolt";
 
 import { MessageError } from "./errors";
 import { ChatBot } from "./types";
 import { getFaceQuiz } from "./quiz";
 import { fetchUsers } from "./data";
+//import { App } from "@slack/bolt";
 
 const getFaceQuizCommand =
   (app: ChatBot) =>
