@@ -12,35 +12,39 @@ const getFaceQuizCommand =
   async ({
     command,
     ack,
-    say,
     respond,
   }: {
     command: SlashCommand;
-    respond: RespondFn;
     ack: AckFn<string>;
-    say: SayFn;
+    respond: RespondFn;
   }) => {
     await ack();
     await respond("Thanks! Processing your face quiz...");
 
-    try {
-      const slackUsers = await fetchUsers({ app });
-      const quiz = await getFaceQuiz({
-        exclude: [command.user_id],
-        slackUsers,
-      });
-
-      await app.dm({ user: command.user_id, blocks: quiz.blocks });
-    } catch (error) {
-      if (error instanceof MessageError) {
-        await app.dm({
-          user: command.user_id,
-          text: (error as MessageError).message,
+    // Do long async work after responding
+    (async (cmd: SlashCommand) => {
+      try {
+        const slackUsers = await fetchUsers({ app });
+        const quiz = await getFaceQuiz({
+          exclude: [cmd.user_id],
+          slackUsers,
         });
-      } else {
-        throw error;
+
+        await app.dm({
+          user: cmd.user_id,
+          blocks: quiz.blocks,
+        });
+      } catch (error) {
+        if (error instanceof MessageError) {
+          await app.dm({
+            user: cmd.user_id,
+            text: (error as MessageError).message,
+          });
+        } else {
+          console.error("Unexpected error during /facequiz:", error);
+        }
       }
-    }
+    })(command);
   };
 
 export const addSlashCommands = (app: ChatBot) => {
