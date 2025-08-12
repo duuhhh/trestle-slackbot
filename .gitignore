@@ -1,2 +1,3 @@
 # Cache-esque files
 tsconfig.tsbuildinfo
+.env
