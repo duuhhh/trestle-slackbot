@@ -1,6 +1,2 @@
-.env
-node_modules/
-dist/
-
 # Cache-esque files
 tsconfig.tsbuildinfo
