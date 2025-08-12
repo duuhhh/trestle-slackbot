@@ -19,7 +19,7 @@ app.command("/facequiz", async ({ ack, respond, command }) => {
 });
 
 // /getVendors
-app.command("/getVendors", async ({ ack, respond, logger }) => {
+app.command("/getvendors", async ({ ack, respond, logger }) => {
   await ack();
   try {
     const headers: Record<string, string> = { Accept: "application/json" };
